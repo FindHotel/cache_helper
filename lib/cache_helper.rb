@@ -37,7 +37,7 @@ module CacheHelper
   end
 
   def self.simple_key_presence_cache(klass, selector, key)
-    klass.where(selector).pluck(key).map {|object| [object, true]}.to_h
+    klass.where(selector).pluck(key).compact.uniq.map {|object| [object, true]}.to_h
   end
 
   def self.compound_key_presence_cache(klass, selector, keys_array)

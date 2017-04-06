@@ -17,7 +17,7 @@ And then execute:
 ## Usage
 
 Provides the following methods.
-For explanation, we will assume we have a class called `Place` with `id,` `name`, `rating`, `longitude` and `latitude` attributes.
+For explanation, we will assume we have a class called `Place` with `id,` `name`, `rating`, `city`, `longitude` and `latitude` attributes.
 
 ### `CacheHelper#simple_cache`
 Create a simple key value cache, both key and value need to be provided.
@@ -42,12 +42,49 @@ CacheHelper.key_to_object_cache(Place, { rating: 5.0 }, :id)
 
 ### `CacheHelper#key_to_objects_cache`
 ```ruby
-# TODO
+# (klass, selector, key) or # (klass, selector, [keys_array])
+# Good for grouping data
+
+CacheHelper.key_to_objects_cache(Place, 'rating > 3', :rating)
+#=> { 5.0 => [#<Place:0x007f8c451dd2c8 id: 1, name: 'FindHotel'>,
+#     #<Place:0x007f8c451dd2c9 id: 2, name: 'Frederix'>,
+#     #<Place:0x007f8c451dd2d0 id: 5, name: 'Ciao Bella'>]
+#     4.0 => [...],
+#     ...
+#   }
+
+# OR an array of keys
+
+CacheHelper.key_to_objects_cache(Place, 'rating > 3', [:rating, :city])
+#=> { [5.0, 'Amsterdam'] => [#<Place:0x007f8c451dd2c8 id: 1, name: 'FindHotel'>,
+#     #<Place:0x007f8c451dd2c9 id: 2, name: 'Frederix'>,
+#     #<Place:0x007f8c451dd2d0 id: 5, name: 'Ciao Bella'>]
+#     [5.0, 'Berlin'] => [...],
+#     [4.0, 'Berlin'] => [...],
+#     ...
+#   }
 ```
 
 ### `CacheHelper#key_presence_cache`
 ```ruby
-# TODO
+# (klass, selector, key) or # (klass, selector, [keys_array])
+# Good for caching the existence of a certain key/key combination in the database
+
+CacheHelper.key_presence_cache(Place, 'rating > 3', :rating)
+#=> { 5.0 => true,
+#     4.0 => false,
+#     3.1 => true,
+#     ...
+#   }
+
+# OR an array of keys
+
+CacheHelper.key_presence_cache(Place, 'rating > 3', [:rating, :city])
+#=> { [5.0, 'Amsterdam'] => true, # there exists 5 star places in Amsterdam
+#     [5.0, 'Berlin'] => [...], # there exists 5 star places in Berlin
+#     [4.0, 'Berlin'] => [...], # there exists 4 star places in Berlin
+#     ...
+#   }
 ```
 
 ## Development
