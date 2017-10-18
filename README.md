@@ -7,7 +7,7 @@ A few methods that will make life easier when it is needed to cache ActiveRecord
 Add this line to your application's Gemfile:
 
 ```ruby
-gem 'cache_helper'
+gem 'cache_helper', git: "git://github.com/FindHotel/cache_helper.git"
 ```
 
 And then execute:
